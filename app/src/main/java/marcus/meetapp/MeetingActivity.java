@@ -37,6 +37,8 @@ public class MeetingActivity extends ActionBarActivity implements SensorEventLis
 
     private GPSTracker gpsTracker;
 
+    private MyService myService;
+
     ListPerson clickedPerson;
 
 
@@ -68,6 +70,8 @@ public class MeetingActivity extends ActionBarActivity implements SensorEventLis
 
         gpsTracker = new GPSTracker(this);
 
+        myService = new MyService();
+
         Location myLocation = gpsTracker.getLocation();
         System.out.println("LOCATION " + myLocation.getLatitude() + " " + myLocation.getLongitude());
         myCoordinateString = String.format(getResources().getString(R.string.my_coordinates),
@@ -81,6 +85,11 @@ public class MeetingActivity extends ActionBarActivity implements SensorEventLis
     private float calculateBearing() {
         return gpsTracker.getLocation().bearingTo(clickedPerson.getLocation());
     }
+
+    private float calculateDistance() {
+        return gpsTracker.getLocation().distanceTo(clickedPerson.getLocation());
+    }
+
 
     @Override
     protected void onResume() {
@@ -105,9 +114,11 @@ public class MeetingActivity extends ActionBarActivity implements SensorEventLis
         // get the angle around the z-axis rotated, simply add nr of degrees
         float bearing = calculateBearing();
 
+        float distance = calculateDistance();
+
         float degree = Math.round(event.values[0] - bearing);
 
-        tvHeading.setText("Heading: " + Float.toString(degree) + " degrees");
+        tvHeading.setText("Distance: " + Float.toString(distance) + " meters ");
 
         // create a rotation animation (reverse turn degree degrees)
         RotateAnimation ra = new RotateAnimation(

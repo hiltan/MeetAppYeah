@@ -4,6 +4,9 @@
     <string name="app_name">MeetApp</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="action_remove">Remove</string>
+    <string name="remove">Remove</string>
+    <string name="cancel">Cancel</string>
     <string name="action_add_person">Add friend</string>
     <string name="action_location_found">Add location</string>
     <string name="title_activity_meeting">MeetingActivity</string>
@@ -13,5 +16,9 @@
     <string name="latitude"> Latitude</string>
     <string name="longitude"> Longitude </string>
     <string name="location"> Location </string>
+    <string name="login"> Login </string>
+    <string name="username"> Username </string>
+    <string name="password"> Password </string>
+
 
 </resources>

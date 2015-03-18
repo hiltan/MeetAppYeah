@@ -1,11 +1,13 @@
 package marcus.meetapp;
 
+import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
 import android.os.Parcelable;
 import android.support.v7.app.ActionBarActivity;
@@ -34,16 +36,12 @@ public class MainActivity extends ActionBarActivity {
 
     ListPerson[] values;
     ListView listview;
+    String username;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Location paris = new Location("a");
-        paris.setLatitude(48);
-        paris.setLongitude(2);
-        Location beijing = new Location("a");
-        beijing.setLatitude(39);
-        beijing.setLongitude(116);
+
 
 
         listview = (ListView) findViewById(R.id.list);
@@ -57,7 +55,11 @@ public class MainActivity extends ActionBarActivity {
 
         }
 */
+        Intent i = getIntent();
+        // getting attached intent data
+        username = i.getStringExtra("username");
         values = loadPrefs();
+        savePrefs();
         final listItemAdapter adapter = new listItemAdapter(this, values);
         listview.setAdapter(adapter);
 
@@ -93,6 +95,8 @@ public class MainActivity extends ActionBarActivity {
                 return true;
             }
         });
+
+
     }
 
     public void removePosition(int position) {
@@ -114,32 +118,42 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void savePrefs() {
-        System.err.println("SAVE PREFS " + values.length);
         Set<String> set = new HashSet<String>();
         for(int i = 0; i < values.length; i++) {
             set.add(values[i].toString());
         }
         SharedPreferences prefs = getSharedPreferences("marcus.meetapp", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
-        editor.putStringSet("key", set);
+        editor.putStringSet(username, set);
         editor.commit();
-
-        Set<String> ssette = prefs.getStringSet("key", null);
-        System.err.println("END SAVE "+ ssette.size());
     }
 
     public ListPerson[] loadPrefs() {
         SharedPreferences prefs = getSharedPreferences("marcus.meetapp", Context.MODE_PRIVATE);
-        Set<String> set = prefs.getStringSet("key", null);
+        Set<String> set = prefs.getStringSet(username, null);
+        if(set == null) {
+            Location paris = new Location("a");
+            paris.setLatitude(48);
+            paris.setLongitude(2);
+            Location beijing = new Location("a");
+            beijing.setLatitude(39);
+            beijing.setLongitude(116);
 
-        System.err.println("LOAD PREFS " + set.size());
+            ListPerson[] listArray = new ListPerson[] {
+                                     new ListPerson("Auto generated: Beijing", beijing, "location"),
+                                     new ListPerson("Auto generated: Paris", paris, "location")};
+            return listArray;
+        }
 
         Object[] returnList = set.toArray();
         ListPerson[] listArray = new ListPerson[set.size()];
         for(int i = 0 ; i < set.size() ;i++) {
             String extract = (String) returnList[i];
             String[] split = extract.split("\\^");
-            System.err.println("->> " + split[0] + " : " + split[1]);
+            if(split[0].contains("Auto generated: ")) {
+                String newSplit0 = split[0].replaceFirst("Auto generated: ", "");
+                split[0] = newSplit0;
+            }
             ListPerson person = new ListPerson(split[0], split[1], split[2], split[3]);
             listArray[i] = person;
         }

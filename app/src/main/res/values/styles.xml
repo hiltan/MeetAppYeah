@@ -4,7 +4,11 @@
     <style name="AppTheme" parent="Theme.AppCompat.Light">
         <!-- Customize your theme here. -->
 
+        <item name="colorPrimary">@color/CornflowerBlue</item>
+        <item name="android:logo">@drawable/logo</item>
+
     </style>
+
 
 
 </resources>
