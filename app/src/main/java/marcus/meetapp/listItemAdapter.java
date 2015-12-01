@@ -1,27 +1,42 @@
 package marcus.meetapp;
 
 
-        import android.content.Context;
-        import android.media.Image;
-        import android.view.LayoutInflater;
-        import android.view.View;
-        import android.view.ViewGroup;
-        import android.widget.ArrayAdapter;
-        import android.widget.ImageButton;
-        import android.widget.ImageView;
-        import android.widget.ListView;
-        import android.widget.TextView;
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.TextView;
 
-public class listItemAdapter extends ArrayAdapter<ListPerson> {
+/**
+ * Adapter used for the ListView in the MainActivity.
+ */
+public class listItemAdapter extends ArrayAdapter<ListPersonLocation> {
     private final Context context;
-    private final ListPerson[] values;
+    private final ListPersonLocation[] values;
 
-    public listItemAdapter(Context context, ListPerson[] values) {
+    /**
+     * Constructor of the adapter.
+     * @param context
+     * @param values
+     */
+    public listItemAdapter(Context context, ListPersonLocation[] values) {
         super(context, R.layout.list_item, values);
         this.context = context;
         this.values = values;
     }
 
+    /**
+     * Creates a View for a ListPersonLocation and defining the listeners
+     * for the buttons that appear when a user long clicks the ListView.
+     * @param position
+     * @param convertView
+     * @param parent
+     * @return
+     */
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = (LayoutInflater) context
@@ -32,7 +47,7 @@ public class listItemAdapter extends ArrayAdapter<ListPerson> {
         ImageView imageView = (ImageView) listItem.findViewById(R.id.icon);
         textView.setText(values[position].getName());
         textView2.setText("Longitud: " + String.valueOf(values[position].getLocation().getLongitude())
-                            + "      Latitud: " + String.valueOf(values[position].getLocation().getLatitude()));
+                + "      Latitud: " + String.valueOf(values[position].getLocation().getLatitude()));
 
         setImage(position, imageView);
 
@@ -45,7 +60,6 @@ public class listItemAdapter extends ArrayAdapter<ListPerson> {
                 if(v.getVisibility() == View.VISIBLE) {
                     ListView listView = (ListView) v.getParent().getParent();
                     int position = listView.getPositionForView((View) v.getParent());
-                    System.err.println("CONTEXT " + context.getClass().toString() + " " +v.getContext());
                     MainActivity main = (MainActivity) v.getContext();
                     main.removePosition(position);
                 }
@@ -60,7 +74,6 @@ public class listItemAdapter extends ArrayAdapter<ListPerson> {
                     v.setVisibility(View.INVISIBLE);
                     ImageView icon = (ImageView) listItem.findViewById(R.id.icon);
                     setImage(position, icon);
-
                 }
             }
         });
@@ -68,6 +81,12 @@ public class listItemAdapter extends ArrayAdapter<ListPerson> {
         return listItem;
     }
 
+    /**
+     * Sets the image of a person or a map on a ListPersonLocation in the
+     * ListView depending on if it is a person or location.
+     * @param position
+     * @param imageView
+     */
     private void setImage(int position, ImageView imageView) {
         if("location".equalsIgnoreCase(values[position].getPersonOrLocation())) {
             imageView.setImageResource(R.drawable.ic_action_map);
