@@ -20,9 +20,15 @@ import android.widget.Toast;
 
 import java.util.Set;
 
-
+/**
+ * Class that defines what happens on the login activity.
+ */
 public class LoginActivity extends ActionBarActivity {
 
+    /**
+     * On create this method sets the listener to the login button.
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,6 +36,14 @@ public class LoginActivity extends ActionBarActivity {
 
         final Button loginButton = (Button) findViewById(R.id.login_button);
         loginButton.setOnClickListener(new View.OnClickListener() {
+            /**
+             * When clicking the login button this listener is called. It will
+             * check if the user exists and if so the password and either log
+             * in or decline the request. If the user does not exist the user
+             * will be created with the given password. Users and password are
+             * stored in the shared preferences.
+             * @param v
+             */
             @Override
             public void onClick(View v) {
                 EditText usernameField = (EditText) findViewById(R.id.username);
@@ -40,50 +54,48 @@ public class LoginActivity extends ActionBarActivity {
                 SharedPreferences prefs = getSharedPreferences("marcus.meetapp", Context.MODE_PRIVATE);
                 String passwordValue = prefs.getString(usernameString + "login", null);
 
-                System.err.println("--> " + passwordString + " --> " + passwordValue);
                 if(passwordValue == null) {
                     SharedPreferences.Editor editor = prefs.edit();
                     editor.putString(usernameString + "login", passwordString);
                     editor.commit();
                 } else if(passwordString.equals(passwordValue)){
-                    System.err.println("INNE PASSWORD KORREKT");
                     Intent i = new Intent(getApplicationContext(), MainActivity.class);
                     EditText username = (EditText) findViewById(R.id.username);
                     i.putExtra("username", username.getText().toString());
                     startActivity(i);
                 } else {
-                    System.err.println("INNE PASSWORD FEL");
                     Context context = getApplicationContext();
                     CharSequence text = "Wrong password to that user!";
                     int duration = Toast.LENGTH_SHORT;
                     Toast toast = Toast.makeText(context, text, duration);
                     toast.show();
                 }
-
-
-
-
             }
         });
-
     }
 
-
+    /**
+     * Adds the remove user option to the actionbar.
+     * @param menu
+     * @return
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_login, menu);
         return true;
     }
 
+    /**
+     * If the remove user button in the action bar is clicked a alert dialog
+     * will appear where the user can enter username and password to delete
+     * a user.
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_remove) {
             buildAlertDialog();
         }
@@ -91,9 +103,13 @@ public class LoginActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Method used to build the alert dialog used when pushing the remove user
+     * button.
+     */
     private void buildAlertDialog() {
-        LayoutInflater linf = LayoutInflater.from(this);
-        final View inflator = linf.inflate(R.layout.alert_dialog_remove, null);
+        LayoutInflater layoutInflater = LayoutInflater.from(this);
+        final View inflator = layoutInflater.inflate(R.layout.alert_dialog_remove, null);
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
 
         alert.setTitle("Remove");
@@ -132,17 +148,14 @@ public class LoginActivity extends ActionBarActivity {
                     int duration = Toast.LENGTH_SHORT;
                     Toast toast = Toast.makeText(context, text, duration);
                     toast.show();
-
                 }
             }
         });
-
         alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 dialog.cancel();
             }
         });
-
         alert.show();
     }
 }

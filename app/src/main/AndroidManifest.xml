@@ -25,7 +25,7 @@
             android:name=".LoginActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme"
-            >
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -43,7 +43,8 @@
         <activity
             android:name=".MeetingActivity"
             android:label="@string/title_activity_meeting"
-            android:parentActivityName=".MainActivity" >
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="marcus.meetapp.MainActivity" />

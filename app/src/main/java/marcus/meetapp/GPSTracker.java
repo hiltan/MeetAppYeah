@@ -1,18 +1,15 @@
 package marcus.meetapp;
 
-/**
- * Created by Hiltan on 15-03-11.
- */
-import android.app.Service;
 import android.content.Context;
-import android.content.Intent;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.util.Log;
 
+/**
+ *  Class used to get the location of the device.
+ */
 public class GPSTracker implements LocationListener {
     private final Context mContext;
     boolean isGPSEnabled = false;
@@ -26,15 +23,18 @@ public class GPSTracker implements LocationListener {
     private static final long MIN_TIME_BW_UPDATES = 1000 * 60 * 1; // 1 minute
 
     protected LocationManager locationManager;
-    private Location m_Location;
+    private Location myLocation;
+
     public GPSTracker(Context context) {
         this.mContext = context;
-        m_Location = getLocation();
-        System.out.println("location Latitude:"+m_Location.getLatitude());
-        System.out.println("location Longitude:"+m_Location.getLongitude());
-        System.out.println("getLocation():"+getLocation());
+        myLocation = getLocation();
+
     }
 
+    /**
+     *  Method that returns the location of the device.
+     * @return
+     */
     public Location getLocation() {
         try {
             locationManager = (LocationManager) mContext
@@ -56,7 +56,7 @@ public class GPSTracker implements LocationListener {
                             LocationManager.NETWORK_PROVIDER,
                             MIN_TIME_BW_UPDATES,
                             MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
-                    Log.d("Network", "Network Enabled");
+                    //Log.d("Network", "Network Enabled");
                     if (locationManager != null) {
                         location = locationManager
                                 .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
@@ -72,7 +72,7 @@ public class GPSTracker implements LocationListener {
                                 LocationManager.GPS_PROVIDER,
                                 MIN_TIME_BW_UPDATES,
                                 MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
-                        Log.d("GPS", "GPS Enabled");
+                        //Log.d("GPS", "GPS Enabled");
                         if (locationManager != null) {
                             location = locationManager
                                     .getLastKnownLocation(LocationManager.GPS_PROVIDER);
@@ -91,7 +91,7 @@ public class GPSTracker implements LocationListener {
 
         return location;
     }
-
+/*
     public void stopUsingGPS() {
         if (locationManager != null) {
             locationManager.removeUpdates(GPSTracker.this);
@@ -116,7 +116,7 @@ public class GPSTracker implements LocationListener {
 
     public boolean canGetLocation() {
         return this.canGetLocation;
-    }
+    }*/
 
     @Override
     public void onLocationChanged(Location arg0) {

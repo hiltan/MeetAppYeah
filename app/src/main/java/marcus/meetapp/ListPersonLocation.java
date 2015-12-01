@@ -5,20 +5,33 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
- * Created by Hiltan on 15-03-08.
+ * Class representing a person or a location that the user has saved.
  */
-public class ListPerson implements Parcelable {
+public class ListPersonLocation implements Parcelable {
     String name;
     Location location;
     String personOrLocation;
 
-    public ListPerson(String name, Location location, String personOrLocation) {
+    /**
+     * Constructor.
+     * @param name
+     * @param location
+     * @param personOrLocation
+     */
+    public ListPersonLocation(String name, Location location, String personOrLocation) {
         this.name = name;
         this.location = location;
         this.personOrLocation = personOrLocation;
     }
 
-    public ListPerson(String name, String latitude, String longitude, String personOrLocation) {
+    /**
+     * Constructor using strings with latitude and longitude instead of a Location.
+     * @param name
+     * @param latitude
+     * @param longitude
+     * @param personOrLocation
+     */
+    public ListPersonLocation(String name, String latitude, String longitude, String personOrLocation) {
         this.name = name;
         Location newLocation = new Location("Construct");
         newLocation.setLatitude(Double.valueOf(latitude));
@@ -27,21 +40,36 @@ public class ListPerson implements Parcelable {
         this.personOrLocation = personOrLocation;
     }
 
+    /**
+     * Name getter.
+     * @return
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Location getter.
+     * @return
+     */
     public Location getLocation() {
         return location;
     }
 
+    /**
+     * Getter for info if its a person or location.
+     * @return
+     */
     public String getPersonOrLocation() {
         return personOrLocation;
     }
 
-    public ListPerson(Parcel in){
+    /**
+     * Constructor using a Parcel.
+     * @param in
+     */
+    public ListPersonLocation(Parcel in){
         String[] data = new String[4];
-
         in.readStringArray(data);
         location = new Location("provider");
         this.name = data[0];
@@ -55,6 +83,11 @@ public class ListPerson implements Parcelable {
         return 0;
     }
 
+    /**
+     * Method writing info to a parcel.
+     * @param dest
+     * @param flags
+     */
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeStringArray(new String[] {
@@ -63,16 +96,24 @@ public class ListPerson implements Parcelable {
                 String.valueOf(this.location.getLongitude()),
                 personOrLocation});
     }
+
+    /**
+     * Method used when creating a ListPersonLocation from a parcel.
+     */
     public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
-        public ListPerson createFromParcel(Parcel in) {
-            return new ListPerson(in);
+        public ListPersonLocation createFromParcel(Parcel in) {
+            return new ListPersonLocation(in);
         }
 
-        public ListPerson[] newArray(int size) {
-            return new ListPerson[size];
+        public ListPersonLocation[] newArray(int size) {
+            return new ListPersonLocation[size];
         }
     };
 
+    /**
+     * Redefined toString. Used when saving info to shared preferences.
+     * @return
+     */
     @Override
     public String toString() {
         return name + "^" + location.getLatitude() + "^" + location.getLongitude() + "^" + personOrLocation;

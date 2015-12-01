@@ -8,26 +8,24 @@ import android.hardware.SensorManager;
 import android.location.Location;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-
+/**
+ * The class that handles the info shown in the screen when a user has selected
+ * a person or location that hen wants to know the direction and distance to.
+ */
 public class MeetingActivity extends ActionBarActivity implements SensorEventListener {
 
-    // define the display assembly compass picture
     private ImageView image;
 
-    // record the compass picture angle turned
     private float currentDegree = 0f;
 
-    // device sensor manager
-    private SensorManager mSensorManager;
+    private SensorManager sensorManager;
 
-    TextView tvHeading;
+    TextView distanceToTarget;
 
     TextView targetCoordinates;
     TextView myCoordinates;
@@ -37,30 +35,30 @@ public class MeetingActivity extends ActionBarActivity implements SensorEventLis
 
     private GPSTracker gpsTracker;
 
-    private MyService myService;
 
-    ListPerson clickedPerson;
+    ListPersonLocation clickedPerson;
 
-
+    /**
+     * On create this class gets info from the intent about the person or
+     * location used to calculate bearing and distance. The coordinates of
+     * the device and the target is shown.
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_meeting);
 
-        //
         image = (ImageView) findViewById(R.id.imageViewCompass);
 
-        // TextView that will tell the user what degree is he heading
-        tvHeading = (TextView) findViewById(R.id.tvHeading);
+        distanceToTarget = (TextView) findViewById(R.id.tvHeading);
 
         targetCoordinates = (TextView) findViewById(R.id.target_coordinates);
         myCoordinates = (TextView) findViewById(R.id.my_coordinates);
 
-        // initialize your android device sensor capabilities
-        mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 
         Intent i = getIntent();
-        // getting attached intent data
         clickedPerson = i.getParcelableExtra("info");
 
         coordinateString = String.format(getResources().getString(R.string.target_coordinates),
@@ -70,57 +68,69 @@ public class MeetingActivity extends ActionBarActivity implements SensorEventLis
 
         gpsTracker = new GPSTracker(this);
 
-        myService = new MyService();
 
         Location myLocation = gpsTracker.getLocation();
-        System.out.println("LOCATION " + myLocation.getLatitude() + " " + myLocation.getLongitude());
+
         myCoordinateString = String.format(getResources().getString(R.string.my_coordinates),
                 myLocation.getLatitude(), myLocation.getLongitude());
 
         myCoordinates.setText(myCoordinateString);
-
-
     }
 
+    /**
+     * Method using the GPS tracker to get the location of the device and then
+     * calculates the bearing to the target.
+     * @return
+     */
     private float calculateBearing() {
         return gpsTracker.getLocation().bearingTo(clickedPerson.getLocation());
     }
 
+    /**
+     * Method using the GPS tracker to get the location of the device and then
+     * calculates the distance to the target.
+     * @return
+     */
     private float calculateDistance() {
         return gpsTracker.getLocation().distanceTo(clickedPerson.getLocation());
     }
 
-
+    /**
+     * Method called if the activity is resumed.
+     */
     @Override
     protected void onResume() {
         super.onResume();
-
-        // for the system's orientation sensor registered listeners
-        mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION),
+        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION),
                 SensorManager.SENSOR_DELAY_GAME);
     }
 
+    /**
+     * On pause the sensor manager unregisters this to stop the sensors and
+     * save battery.
+     */
     @Override
     protected void onPause() {
         super.onPause();
-
-        // to stop the listener and save battery
-        mSensorManager.unregisterListener(this);
+        sensorManager.unregisterListener(this);
     }
 
+    /**
+     * When the sensor changes this method is used to update the distance
+     * and direction pointer shown in this activity.
+     * @param event
+     */
     @Override
     public void onSensorChanged(SensorEvent event) {
 
-        // get the angle around the z-axis rotated, simply add nr of degrees
         float bearing = calculateBearing();
 
         float distance = calculateDistance();
 
         float degree = Math.round(event.values[0] - bearing);
 
-        tvHeading.setText("Distance: " + Float.toString(distance) + " meters ");
+        distanceToTarget.setText("Distance: " + Float.toString(distance) + " meters ");
 
-        // create a rotation animation (reverse turn degree degrees)
         RotateAnimation ra = new RotateAnimation(
                 currentDegree,
                 -degree,
@@ -128,20 +138,21 @@ public class MeetingActivity extends ActionBarActivity implements SensorEventLis
                 Animation.RELATIVE_TO_SELF,
                 0.5f);
 
-        // how long the animation will take place
         ra.setDuration(210);
 
-        // set the animation after the end of the reservation status
         ra.setFillAfter(true);
 
-        // Start the animation
         image.startAnimation(ra);
         currentDegree = -degree;
 
     }
 
+    /**
+     * Not used.
+     * @param sensor
+     * @param accuracy
+     */
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
-        // not in use
     }
 }
