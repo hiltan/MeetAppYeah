@@ -28,9 +28,9 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="@string/target_coordinates"
         android:id="@+id/target_coordinates"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="49dp" />
+        android:layout_below="@+id/textView3"
+        android:layout_alignLeft="@+id/textView3"
+        android:layout_alignStart="@+id/textView3" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -39,7 +39,36 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="@string/my_coordinates"
         android:id="@+id/my_coordinates"
-        android:layout_above="@+id/target_coordinates"
-        android:layout_centerHorizontal="true" />
+        android:layout_below="@+id/textView2"
+        android:layout_centerHorizontal="true"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingBottom="12dp"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/my_info"
+        android:id="@+id/textView2"
+        android:layout_marginTop="63dp"
+        android:layout_below="@+id/imageViewCompass"
+        android:layout_alignLeft="@+id/my_coordinates"
+        android:layout_alignStart="@+id/my_coordinates"
+        android:textColor="@color/Black"
+
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingBottom="12dp"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/target_info"
+        android:id="@+id/textView3"
+        android:layout_below="@+id/my_coordinates"
+        android:layout_alignLeft="@+id/my_coordinates"
+        android:layout_alignStart="@+id/my_coordinates"
+        android:textColor="@color/Black"
+        android:paddingTop="30dp"/>
 
 </RelativeLayout>

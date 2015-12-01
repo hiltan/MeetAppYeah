@@ -11,14 +11,18 @@
     <string name="action_location_found">Add location</string>
     <string name="title_activity_meeting">MeetingActivity</string>
     <string name="target_coordinates">Latitude: %1$.3f  Longitude: %2$.3f</string>
-    <string name="my_coordinates">My latitude: %1$.3f  My longitude: %2$.3f</string>
+    <string name="my_coordinates">Latitude: %1$.3f  Longitude: %2$.3f</string>
     <string name="location_prompt">Enter Latitude and Longitude of a location</string>
+    <string name="person_prompt">Enter Latitude and Longitude of a person</string>
     <string name="latitude"> Latitude</string>
     <string name="longitude"> Longitude </string>
     <string name="location"> Location </string>
-    <string name="login"> Login </string>
+    <string name="person"> Person </string>
+    <string name="login"> Create user / Login to existing user </string>
     <string name="username"> Username </string>
     <string name="password"> Password </string>
+    <string name="target_info"> Target location </string>
+    <string name="my_info"> My Location </string>
 
 
 </resources>
